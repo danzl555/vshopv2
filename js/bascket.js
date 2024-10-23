@@ -1,14 +1,48 @@
 export class Cart {
-    constructor() {
+    constructor(cartRoot) {
         this.cartItems = {};
-        this.cartRoot = document.querySelector('.product-cart-bascket'); // root элемент корзины
-        this.totalPriceElement = document.querySelector('.total__price');
+        this.cartRoot = cartRoot; // Корневой элемент корзины
+        this.cartContent = this.createCartContent(); 
         this.initFromLocalStorage();
 
-        // Добавляем слушатель для кастомного события добавления товара в корзину
         document.addEventListener('productAdded', (event) => {
             this.addToCart(event.detail);
         });
+    }
+
+    // Создание всех элементов корзины
+    createCartContent() {
+        const prodBasket = document.createElement('div');
+        prodBasket.classList.add('prod-bascket');
+
+        this.productCartBasket = document.createElement('div');
+        this.productCartBasket.classList.add('product-cart-bascket');
+        prodBasket.appendChild(this.productCartBasket); 
+
+        const totalCheckout = document.createElement('div');
+        totalCheckout.classList.add('total-checkout');
+
+        const total = document.createElement('p');
+        total.classList.add('total');
+        total.textContent = 'Total: ';
+
+        this.totalPriceElement = document.createElement('span');
+        this.totalPriceElement.classList.add('total__price');
+        total.appendChild(this.totalPriceElement); 
+
+        const checkoutButton = document.createElement('button');
+        checkoutButton.classList.add('checkout-btn');
+        checkoutButton.textContent = 'CHECKOUT';
+
+        checkoutButton.addEventListener('click', () => this.checkout());
+
+        totalCheckout.appendChild(total);
+        totalCheckout.appendChild(checkoutButton);
+        prodBasket.appendChild(totalCheckout);
+
+        this.cartRoot.appendChild(prodBasket); 
+
+        return this.productCartBasket; 
     }
 
     initFromLocalStorage() {
@@ -33,40 +67,68 @@ export class Cart {
     }
 
     displayCartItem(product, quantity) {
-        let cartItem = this.cartRoot.querySelector(`.cart-item-${product.id}`);
+        // Используем массив для хранения новых элементов
+        let cartItem = this.productCartBasket.cartItemsElements || [];
 
-        if (!cartItem) {
-            cartItem = document.createElement('div');
-            cartItem.classList.add('product-card', `cart-item-${product.id}`);
+        // Проверяем, есть ли элемент в массиве
+        let existingCartItem = cartItem.find(item => item.product.id === product.id);
 
-            cartItem.innerHTML = `
-                <img src="${product.thumbnail}" alt="${product.title}" />
-                <div class="product-info">
-                    <h3>${product.title}</h3>
-                    <p class="quantity">x${quantity}</p>
-                    <p class="price">$${(quantity * product.price).toFixed(2)}</p>
-                </div>
-                <span class="close-btn">&times;</span>
-            `;
+        if (!existingCartItem) {
+            const newCartItem = document.createElement('div');
+            newCartItem.classList.add('product-card', `cart-item-${product.id}`);
 
-            const closeBtn = cartItem.querySelector('.close-btn');
+            const img = document.createElement('img');
+            img.src = product.thumbnail;
+            img.alt = product.title;
+
+            const productInfo = document.createElement('div');
+            productInfo.classList.add('product-info');
+
+            const title = document.createElement('h3');
+            title.textContent = product.title;
+
+            const quantityElement = document.createElement('p');
+            quantityElement.classList.add('quantity');
+            quantityElement.textContent = `x${quantity}`;
+
+            const priceElement = document.createElement('p');
+            priceElement.classList.add('price');
+            priceElement.textContent = `$${(quantity * product.price).toFixed(2)}`;
+
+            productInfo.appendChild(title);
+            productInfo.appendChild(quantityElement);
+            productInfo.appendChild(priceElement);
+
+            const closeBtn = document.createElement('span');
+            closeBtn.classList.add('close-btn');
+            closeBtn.innerHTML = '&times;';
+
             closeBtn.addEventListener('click', () => this.removeFromCart(product.id));
 
-            this.cartRoot.appendChild(cartItem);
+            newCartItem.appendChild(img);
+            newCartItem.appendChild(productInfo);
+            newCartItem.appendChild(closeBtn);
+
+            this.productCartBasket.appendChild(newCartItem);
+            cartItem.push({ product, quantity, element: newCartItem, quantityElement, priceElement }); 
+            this.productCartBasket.cartItemsElements = cartItem;
         } else {
-            const quantityElement = cartItem.querySelector('.quantity');
-            const priceElement = cartItem.querySelector('.price');
-            quantityElement.textContent = `x${quantity}`;
-            priceElement.textContent = `$${(quantity * product.price).toFixed(2)}`;
+           
+            existingCartItem.quantity++;
+            existingCartItem.quantityElement.textContent = `x${existingCartItem.quantity}`;
+            existingCartItem.priceElement.textContent = `$${(existingCartItem.quantity * product.price).toFixed(2)}`;
         }
     }
 
     removeFromCart(productId) {
-        const cartItem = this.cartRoot.querySelector(`.cart-item-${productId}`);
-        cartItem.remove();
-        delete this.cartItems[productId];
-        this.updateTotalPrice();
-        this.saveToLocalStorage();
+        const cartItem = this.productCartBasket.cartItemsElements.find(item => item.product.id === productId);
+
+        if (cartItem) {
+            cartItem.element.remove();
+            delete this.cartItems[productId];
+            this.updateTotalPrice();
+            this.saveToLocalStorage();
+        }
     }
 
     updateTotalPrice() {
@@ -80,7 +142,7 @@ export class Cart {
 
     checkout() {
         this.cartItems = {};
-        this.cartRoot.innerHTML = '';
+        this.productCartBasket.innerHTML = '';
         this.updateTotalPrice();
         localStorage.removeItem('cartItems');
     }

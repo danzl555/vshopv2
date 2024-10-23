@@ -1,10 +1,10 @@
 import { Card } from './card.js';
 
 export class Catalog {
-    constructor(products, cart) {
+    constructor(products, catalogRoot, cart) {
         this.products = products;
         this.cart = cart;
-        this.catalogRoot = document.getElementById('product-container'); 
+        this.catalogRoot = catalogRoot;  // Передаём рут элемент
         this.productCache = {}; // для кэширования карточек
         this.currentProductIndex = 0;
         this.productsPerPage = 9;

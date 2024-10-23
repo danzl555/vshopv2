@@ -5,11 +5,13 @@ import { fetchProducts } from '../api/api.js';
 async function initApp() {
     try {
         const products = await fetchProducts();
-        const cart = new Cart();
-        const catalog = new Catalog(products, cart);
 
-        const checkoutButton = document.querySelector('.checkout-btn');
-        checkoutButton.addEventListener('click', () => cart.checkout());
+        const catalogRoot = document.getElementById('catalog-root'); // Рут для каталога
+        const cartRoot = document.getElementById('cart-root'); // Рут для корзины
+
+        const cart = new Cart(cartRoot); 
+        const catalog = new Catalog(products, catalogRoot, cart);
+
     } catch (error) {
         console.error('Ошибка при инициализации приложения:', error);
     }

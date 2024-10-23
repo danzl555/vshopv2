@@ -8,28 +8,50 @@ export class Card {
         const card = document.createElement('div');
         card.classList.add('card');
 
-        card.innerHTML = `
-            <img
-                src="${this.product.thumbnail}"
-                class="product-image"
-                alt="${this.product.title}"
-            />
-            <h2 class="title">${this.product.title}</h2>
-            <p class="desc">${this.product.description}</p>
-            <div class="price-cart">
-                <p class="price">$${this.product.price}</p>
-                <button class="buy-button">
-                    <img src="./cart-icon.svg" alt="cart icon" />
-                </button>
-            </div>
-        `;
+        // Создаем элементы карточки
+        const image = document.createElement('img');
+        image.src = this.product.thumbnail;
+        image.classList.add('product-image');
+        image.alt = this.product.title;
 
-        const buyButton = card.querySelector('.buy-button');
+        const title = document.createElement('h2');
+        title.classList.add('title');
+        title.textContent = this.product.title;
+
+        const description = document.createElement('p');
+        description.classList.add('desc');
+        description.textContent = this.product.description;
+
+        const priceCartDiv = document.createElement('div');
+        priceCartDiv.classList.add('price-cart');
+
+        const price = document.createElement('p');
+        price.classList.add('price');
+        price.textContent = `$${this.product.price}`;
+
+        const buyButton = document.createElement('button');
+        buyButton.classList.add('buy-button');
+
+        const buyButtonIcon = document.createElement('img');
+        buyButtonIcon.src = './cart-icon.svg';
+        buyButtonIcon.alt = 'cart icon';
+
+        buyButton.appendChild(buyButtonIcon);
+
+        // Привязываем событие к кнопке
         buyButton.addEventListener('click', () => {
-            // кастомное событие для добавления товара в корзину
+            // Кастомное событие для добавления товара в корзину
             const event = new CustomEvent('productAdded', { detail: this.product });
             document.dispatchEvent(event);
         });
+
+        priceCartDiv.appendChild(price);
+        priceCartDiv.appendChild(buyButton);
+
+        card.appendChild(image);
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(priceCartDiv);
 
         return card;
     }
