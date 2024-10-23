@@ -67,11 +67,8 @@ export class Cart {
     }
 
     displayCartItem(product, quantity) {
-        // Используем массив для хранения новых элементов
-        let cartItem = this.productCartBasket.cartItemsElements || [];
-
-        // Проверяем, есть ли элемент в массиве
-        let existingCartItem = cartItem.find(item => item.product.id === product.id);
+        // Проверяем, есть ли элемент в корзине
+        let existingCartItem = this.productCartBasket.cartItemsElements?.find(item => item.product.id === product.id);
 
         if (!existingCartItem) {
             const newCartItem = document.createElement('div');
@@ -110,10 +107,10 @@ export class Cart {
             newCartItem.appendChild(closeBtn);
 
             this.productCartBasket.appendChild(newCartItem);
-            cartItem.push({ product, quantity, element: newCartItem, quantityElement, priceElement }); 
-            this.productCartBasket.cartItemsElements = cartItem;
+            this.productCartBasket.cartItemsElements = this.productCartBasket.cartItemsElements || [];
+            this.productCartBasket.cartItemsElements.push({ product, quantity, element: newCartItem, quantityElement, priceElement }); 
         } else {
-           
+            // Обновляем количество и цену существующего товара
             existingCartItem.quantity++;
             existingCartItem.quantityElement.textContent = `x${existingCartItem.quantity}`;
             existingCartItem.priceElement.textContent = `$${(existingCartItem.quantity * product.price).toFixed(2)}`;
@@ -126,6 +123,7 @@ export class Cart {
         if (cartItem) {
             cartItem.element.remove();
             delete this.cartItems[productId];
+            this.productCartBasket.cartItemsElements = this.productCartBasket.cartItemsElements.filter(item => item.product.id !== productId); // Обновляем массив элементов
             this.updateTotalPrice();
             this.saveToLocalStorage();
         }

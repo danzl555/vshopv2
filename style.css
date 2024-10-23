@@ -52,7 +52,6 @@ body {
   height: 20px;
 }
 
-
 .logo {
   display: flex;
   align-items: center;
@@ -78,6 +77,92 @@ body {
   text-decoration: underline;
 }
 
+/* Блок фильтров */
+.filter-button {
+  display: flex; 
+  align-items: center; 
+  text-align: center;
+  justify-content: center;
+  padding: 10px 15px; 
+  background-color: #ffffff;
+  border: none; 
+  border-radius: 4px; 
+  font-weight: 600;
+  margin-right: -680px;
+  width: 300px;
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0; /* Цвет фона при наведении */
+}
+
+.filter-icon {
+  margin-right: 8px; /* Отступ справа от изображения */
+  width: 20px; /* Ширина изображения */
+  height: 20px; /* Высота изображения */
+}
+
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  width: 1240px;
+  margin: 0px auto;
+  padding: 10px;
+  gap: 10px;
+  border: 2px solid black;
+}
+
+.filter__tags-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+
+  width: 1220px;
+  border: 2px solid black;
+}
+
+.filter__brands-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  width: 1220px;
+  border: 2px solid black;
+}
+
+/* Скрываем стандартный чекбокс */
+.checkbox-card {
+  display: none; /* Скрываем стандартный чекбокс */
+}
+
+/* Стили для метки (label) */
+.filter-label {
+  position: relative; /* Для позиционирования псевдоэлемента */
+  padding-left: 25px; /* Отступ для текста, чтобы он не налезал на псевдоэлемент */
+  cursor: pointer; /* Курсор при наведении */
+}
+
+/* Стили для активного состояния */
+.label-card.active {
+  background-color: black; /* Черный фон при активном состоянии */
+  color: white; /* Белый текст при активном состоянии */
+}
+
+/* Дополнительные стили для меток */
+.label-card {
+  font-size: 12px;
+  padding: 5px; /* Отступы вокруг текста */
+  border: 1px solid black; /* Рамка по умолчанию */
+  border-radius: 4px; /* Закругление углов */
+  transition: background-color 0.3s, color 0.3s; /* Плавный переход */
+}
+
+
 /* Блок для каталога и корзины */
 .content {
   width: 1240px;
@@ -96,9 +181,9 @@ body {
 }
 
 .show-more-button {
-  display: block; 
+  display: block;
   margin: 20px auto;
-  padding: 10px 20px; 
+  padding: 10px 20px;
   width: 500px;
   background-color: #ffffff;
   color: black;
