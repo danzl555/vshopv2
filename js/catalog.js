@@ -8,7 +8,7 @@ export class Catalog {
         this.catalogRoot = catalogRoot;
         this.productCache = {}; // Кэш для всех загруженных продуктов
         this.currentProductIndex = 0;
-        this.productsPerPage = 6; // Загрузка по 6 продуктов за раз
+        this.productsPerPage = 9; // Загрузка по 9 продуктов за раз
         this.totalProducts = 0; // Общее количество продуктов на сервере
         this.showMoreButton = document.createElement('button');
         this.showMoreButton.textContent = 'Show More';
@@ -54,6 +54,8 @@ export class Catalog {
         products.forEach(product => {
             if (!this.productCache[product.id]) return; // Проверяем кэш
             const card = new Card(product);
+            // Добавляем слушатель на событие для добавления в корзину
+            card.addToCartCallback = () => this.cart.addToCart(product);
             this.catalogRoot.insertBefore(card.render(), this.showMoreButton);
         });
         this.currentProductIndex += products.length;

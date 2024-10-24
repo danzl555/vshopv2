@@ -1,10 +1,11 @@
 export class Cart {
     constructor(cartRoot) {
-        this.cartItems = {};
+        this.cartItems = {}; // Хранит товары в корзине
         this.cartRoot = cartRoot; // Корневой элемент корзины
-        this.cartContent = this.createCartContent(); 
+        this.cartContent = this.createCartContent();
         this.initFromLocalStorage();
 
+        // Слушатель событий для добавления продукта в корзину
         document.addEventListener('productAdded', (event) => {
             this.addToCart(event.detail);
         });
@@ -67,9 +68,9 @@ export class Cart {
     }
 
     displayCartItem(product, quantity) {
-        // Проверяем, есть ли элемент в корзине
-        let existingCartItem = this.productCartBasket.cartItemsElements?.find(item => item.product.id === product.id);
-
+        // Удаляем существующий элемент, если он уже есть
+        const existingCartItem = this.productCartBasket.querySelector(`.cart-item-${product.id}`);
+        
         if (!existingCartItem) {
             const newCartItem = document.createElement('div');
             newCartItem.classList.add('product-card', `cart-item-${product.id}`);
@@ -107,23 +108,21 @@ export class Cart {
             newCartItem.appendChild(closeBtn);
 
             this.productCartBasket.appendChild(newCartItem);
-            this.productCartBasket.cartItemsElements = this.productCartBasket.cartItemsElements || [];
-            this.productCartBasket.cartItemsElements.push({ product, quantity, element: newCartItem, quantityElement, priceElement }); 
         } else {
             // Обновляем количество и цену существующего товара
-            existingCartItem.quantity++;
-            existingCartItem.quantityElement.textContent = `x${existingCartItem.quantity}`;
-            existingCartItem.priceElement.textContent = `$${(existingCartItem.quantity * product.price).toFixed(2)}`;
+            const quantityElement = existingCartItem.querySelector('.quantity');
+            const priceElement = existingCartItem.querySelector('.price');
+            quantityElement.textContent = `x${quantity}`;
+            priceElement.textContent = `$${(quantity * product.price).toFixed(2)}`;
         }
     }
 
     removeFromCart(productId) {
-        const cartItem = this.productCartBasket.cartItemsElements.find(item => item.product.id === productId);
-
+        const cartItem = this.productCartBasket.querySelector(`.cart-item-${productId}`);
+        
         if (cartItem) {
-            cartItem.element.remove();
+            cartItem.remove();
             delete this.cartItems[productId];
-            this.productCartBasket.cartItemsElements = this.productCartBasket.cartItemsElements.filter(item => item.product.id !== productId); // Обновляем массив элементов
             this.updateTotalPrice();
             this.saveToLocalStorage();
         }

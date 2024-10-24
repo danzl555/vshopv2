@@ -176,7 +176,7 @@ body {
   background-color: #ffffff;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  align-items: start;
   gap: 10px;
 }
 
@@ -184,7 +184,7 @@ body {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
-  width: 500px;
+  width: 700px;
   background-color: #ffffff;
   color: black;
   border: 3px solid;
@@ -192,11 +192,12 @@ body {
   font-size: 16px;
   cursor: pointer;
   text-align: center;
-  transition: background-color 0.3s;
+  transition: background-color 0.7s;
 }
 
 .show-more-button:hover {
-  background-color: #c3c3c3;
+  background-color: #000000;
+  color: white;
 }
 
 /* Стили для футера */
@@ -218,4 +219,8 @@ body {
 .footer a {
   color: #fff;
   text-decoration: underline;
+}
+
+.footer-img{
+  width: 20px;
 }

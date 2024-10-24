@@ -8,7 +8,6 @@ export class Card {
         const card = document.createElement('div');
         card.classList.add('card');
 
-        // Создаем элементы карточки
         const image = document.createElement('img');
         image.src = this.product.thumbnail;
         image.classList.add('product-image');
@@ -27,7 +26,7 @@ export class Card {
 
         const price = document.createElement('p');
         price.classList.add('price');
-        price.textContent = `$${this.product.price}`;
+        price.textContent = `$${this.product.price.toFixed(2)}`;
 
         const buyButton = document.createElement('button');
         buyButton.classList.add('buy-button');
@@ -40,9 +39,9 @@ export class Card {
 
         // Привязываем событие к кнопке
         buyButton.addEventListener('click', () => {
-            // Кастомное событие для добавления товара в корзину
-            const event = new CustomEvent('productAdded', { detail: this.product });
-            document.dispatchEvent(event);
+            if (this.addToCartCallback) {
+                this.addToCartCallback(this.product); // Вызываем функцию добавления в корзину
+            }
         });
 
         priceCartDiv.appendChild(price);
