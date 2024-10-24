@@ -1,4 +1,4 @@
-import { fetchProducts, getUniqueTags, getUniqueBrands } from '../api/api';
+import { loadProducts, getUniqueTags, getUniqueBrands } from '../api/api.js';
 
 export class Filter {
     constructor(catalog) {
@@ -11,43 +11,30 @@ export class Filter {
 
     async initFilters() {
         try {
-            this.products = await this.fetchAllProducts(); // Загружаем все продукты
-
-            // Получаем уникальные теги и бренды
-            const uniqueTags = getUniqueTags(this.products);
-            const uniqueBrands = getUniqueBrands(this.products);
-
-            // Находим контейнеры для фильтров
-            const tagsFilterContainer = document.querySelector('.filter__tags-filter');
-            const brandsFilterContainer = document.querySelector('.filter__brands-filter');
-
-            // Создаём чекбоксы для тегов и брендов
-            this.createCheckboxes(uniqueTags, tagsFilterContainer, 'tag');
-            this.createCheckboxes(uniqueBrands, brandsFilterContainer, 'brand');
+            // Инициализируем фильтры с кэшированными продуктами
+            this.updateFilters(Object.values(this.catalog.productCache));
         } catch (error) {
             console.error('Ошибка при инициализации фильтров:', error);
         }
     }
 
-    async fetchAllProducts() {
-        const allProducts = [];
-        let skip = 0;
-        const limit = 30; // Задаем лимит на количество товаров за один запрос
-
-        while (true) {
-            const response = await fetch(`https://dummyjson.com/products?skip=${skip}&limit=${limit}`);
-            const data = await response.json();
-            allProducts.push(...data.products);
-
-            // Проверяем, есть ли еще продукты
-            if (allProducts.length >= data.total) {
-                break; // Если загружено больше или равно общему количеству, выходим из цикла
-            }
-
-            skip += limit; // Увеличиваем количество пропускаемых товаров
+    updateFilters(products) {
+        if (!products || products.length === 0) {
+            console.warn('Нет загруженных продуктов для обновления фильтров');
+            return; // Если продуктов нет, ничего не делаем
         }
 
-        return allProducts; // Возвращаем все загруженные продукты
+        // Получаем уникальные теги и бренды только из загруженных продуктов
+        const uniqueTags = getUniqueTags(products);
+        const uniqueBrands = getUniqueBrands(products);
+
+        // Находим контейнеры для фильтров
+        const tagsFilterContainer = document.querySelector('.filter__tags-filter');
+        const brandsFilterContainer = document.querySelector('.filter__brands-filter');
+
+        // Создаём чекбоксы для тегов и брендов
+        this.createCheckboxes(uniqueTags, tagsFilterContainer, 'tag');
+        this.createCheckboxes(uniqueBrands, brandsFilterContainer, 'brand');
     }
 
     createCheckboxes(items, container, type) {
