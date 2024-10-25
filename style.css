@@ -115,26 +115,31 @@ body {
 }
 
 .tags-block {
-  font-size: 20px;
+  font-size: 16px;
   width: 100%;
-  height: 50px;
+  height: 30px;
   color: white;
   background-color: black;
-  line-height: 50px;
-  padding-left: 10px;
+  padding: 10px;
   font-weight: 500;
+
+  display: flex;
+  align-items: center;
+
 }
 
 .brands-block {
-  font-size: 20px;
+  font-size: 16px;
   width: 100%;
-  height: 50px;
-  margin-top: 10px;
+  height: 30px;
+  margin-top: 5px;
   color: white;
   background-color: black;
-  line-height: 50px;
-  padding-left: 10px;
+  padding: 10px;
   font-weight: 500;
+
+  display: flex;
+  align-items: center;
 }
 
 .filter__tags-filter {
@@ -193,16 +198,28 @@ body {
   width: 868px;
   background-color: #ffffff;
   display: flex;
+  flex-direction: column; /* Вертикальная компоновка */
+}
+
+.products-container {
+  display: flex;
   flex-wrap: wrap;
-  align-items: start;
   gap: 10px;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+
+/* Контейнер для кнопки Show More */
+.show-more-container {
+  width: 700px;
+  margin: 20px auto;
+  text-align: center;
 }
 
 .show-more-button {
-  display: block;
-  margin: 20px auto;
+  width: 300px;
   padding: 10px 20px;
-  width: 700px;
+  height: 50px;
   background-color: #ffffff;
   color: black;
   border: 3px solid;
@@ -217,6 +234,7 @@ body {
   background-color: #000000;
   color: white;
 }
+
 
 /* Стили для футера */
 .footer {
