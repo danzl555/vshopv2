@@ -1,4 +1,5 @@
-import { loadProducts, getUniqueTags, getUniqueBrands } from '../api/api.js';
+import { loadProducts } from '../api/api.js';
+import { getUniqueTags, getUniqueBrands } from './helper.js';
 
 export class Filter {
     constructor(catalog) {
