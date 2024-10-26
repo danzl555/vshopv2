@@ -1,4 +1,8 @@
 export class Cart {
+    // Константы
+    static TOTAL_LABEL = 'Total: '; // Метка для общего итога
+    static CHECKOUT_BUTTON_TEXT = 'CHECKOUT'; // Текст кнопки "CHECKOUT"
+
     constructor(cartRoot) {
         this.cartItems = {}; // Хранит товары в корзине
         this.cartRoot = cartRoot; // Корневой элемент корзины
@@ -25,7 +29,7 @@ export class Cart {
 
         const total = document.createElement('p');
         total.classList.add('total');
-        total.textContent = 'Total: ';
+        total.textContent = Cart.TOTAL_LABEL; // Используем константу для метки
 
         this.totalPriceElement = document.createElement('span');
         this.totalPriceElement.classList.add('total__price');
@@ -33,7 +37,7 @@ export class Cart {
 
         const checkoutButton = document.createElement('button');
         checkoutButton.classList.add('checkout-btn');
-        checkoutButton.textContent = 'CHECKOUT';
+        checkoutButton.textContent = Cart.CHECKOUT_BUTTON_TEXT; // Используем константу для текста кнопки
 
         checkoutButton.addEventListener('click', () => this.checkout());
 

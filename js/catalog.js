@@ -3,12 +3,17 @@ import { Filter } from './filter.js';
 import { loadProducts } from '../api/api.js';
 
 export class Catalog {
+    // Константы
+    static PRODUCTS_PER_PAGE = 9; // Загрузка по 9 продуктов за раз
+    static SHOW_MORE_BUTTON_TEXT = 'Show More'; // Текст кнопки "Show More"
+    static WARN_LOAD_FAILED = 'Не удалось загрузить продукты'; // Предупреждение о неудачной загрузке
+    static WARN_INVALID_DATA = 'Продукты не загружены или неверный формат данных'; // Предупреждение о неверных данных
+
     constructor(catalogRoot, cart) {
         this.cart = cart;
         this.catalogRoot = catalogRoot;
         this.productCache = {}; // Кэш для всех загруженных продуктов
         this.currentProductIndex = 0;
-        this.productsPerPage = 9; // Загрузка по 9 продуктов за раз
         this.totalProducts = 0; // Общее количество продуктов на сервере
 
         // Создаем контейнер для товаров
@@ -21,7 +26,7 @@ export class Catalog {
 
         // Создаем кнопку "Show More"
         this.showMoreButton = document.createElement('button');
-        this.showMoreButton.textContent = 'Show More';
+        this.showMoreButton.textContent = Catalog.SHOW_MORE_BUTTON_TEXT;
         this.showMoreButton.classList.add('show-more-button');
 
         // Вставляем кнопку в контейнер для кнопки
@@ -36,7 +41,7 @@ export class Catalog {
     async init() {
         try {
             // Загружаем первые продукты
-            const { products, total } = await loadProducts(0, this.productsPerPage);
+            const { products, total } = await loadProducts(0, Catalog.PRODUCTS_PER_PAGE);
             this.totalProducts = total;
 
             if (products && products.length > 0) {
@@ -45,7 +50,7 @@ export class Catalog {
                 this.filter = new Filter(this); // Инициализируем фильтры
                 this.filter.updateFilters(Object.values(this.productCache)); // Обновляем фильтры
             } else {
-                console.warn('Не удалось загрузить продукты');
+                console.warn(Catalog.WARN_LOAD_FAILED);
             }
         } catch (error) {
             console.error('Ошибка при инициализации каталога:', error);
@@ -104,7 +109,7 @@ export class Catalog {
         }
 
         try {
-            const { products } = await loadProducts(this.currentProductIndex, this.productsPerPage);
+            const { products } = await loadProducts(this.currentProductIndex, Catalog.PRODUCTS_PER_PAGE);
             this.cacheProducts(products); // Кэшируем новые продукты
         } catch (error) {
             console.error('Ошибка при загрузке дополнительных продуктов:', error);
