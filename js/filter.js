@@ -7,6 +7,7 @@ export class Filter {
     static FILTER_CONTAINER_HIDE = 'none';
     static CHECKBOX_TYPE_TAG = 'tag';
     static CHECKBOX_TYPE_BRAND = 'brand';
+    static ACTIVE_CLASS = 'active-filter'; // Новый класс для активных фильтров
 
     constructor(root, catalog) {
         this.root = root;
@@ -61,6 +62,11 @@ export class Filter {
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(item));
 
+            // Применение стилей для активного состояния
+            if (checkbox.checked) {
+                label.classList.add(Filter.ACTIVE_CLASS);
+            }
+
             container.appendChild(label);
 
             label.addEventListener('click', () => {
@@ -70,7 +76,7 @@ export class Filter {
                     } else {
                         this.activeBrands.delete(item);
                     }
-                    label.classList.remove('active');
+                    label.classList.remove(Filter.ACTIVE_CLASS); // Убираем активный класс
                     checkbox.checked = false;
                 } else {
                     if (type === Filter.CHECKBOX_TYPE_TAG) {
@@ -78,7 +84,7 @@ export class Filter {
                     } else {
                         this.activeBrands.add(item);
                     }
-                    label.classList.add('active');
+                    label.classList.add(Filter.ACTIVE_CLASS); // Добавляем активный класс
                     checkbox.checked = true;
                 }
                 this.catalog.filterProducts();

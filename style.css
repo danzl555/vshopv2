@@ -216,6 +216,12 @@ body {
   text-align: center;
 }
 
+.active-filter {
+  background-color: black; /* Черный фон */
+  color: white;            /* Белый текст */
+}
+
+
 .show-more-button {
   width: 300px;
   padding: 10px 20px;
