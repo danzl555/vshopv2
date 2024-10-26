@@ -13,7 +13,7 @@ export class Catalog {
         this.catalogRoot = catalogRoot;
         this.filterRoot = filterRoot;
         this.productCache = {};
-        this.currentProductIndex = 0; // Изначально 0
+        this.currentProductId = 0; // Начинаем с ID 1
         this.totalProducts = 0;
 
         this.productsContainer = document.createElement('div');
@@ -34,8 +34,6 @@ export class Catalog {
 
     async init() {
         await this.loadInitialProducts();
-
-        // Обработчик события для кнопки "Show More"
         this.showMoreButton.addEventListener('click', async () => {
             await this.loadMoreProducts();
         });
@@ -43,7 +41,7 @@ export class Catalog {
 
     async loadInitialProducts() {
         try {
-            const { products, total } = await loadProducts(this.currentProductIndex, Catalog.PRODUCTS_PER_PAGE);
+            const { products, total } = await loadProducts(this.currentProductId, Catalog.PRODUCTS_PER_PAGE);
             this.totalProducts = total;
 
             if (products && products.length > 0) {
@@ -57,7 +55,7 @@ export class Catalog {
                 console.warn(Catalog.WARN_LOAD_FAILED);
             }
         } catch (error) {
-            console.error('Ошибка при инициализации каталога:', error);
+            console.error('Ошибка при загрузке начальных продуктов:', error);
         }
     }
 
@@ -68,41 +66,41 @@ export class Catalog {
             }
         });
         console.log('Кэшированные продукты:', this.productCache);
+        this.currentProductId += products.length; // Обновляем текущий ID
     }
 
     renderProducts(products) {
+        this.productsContainer.innerHTML = ''; // Очищаем контейнер перед рендерингом
         products.forEach(product => {
             if (!this.productCache[product.id]) return;
             const card = new Card(product);
             card.addToCartCallback = () => this.cart.addToCart(product);
             this.productsContainer.appendChild(card.render());
         });
-
-        this.currentProductIndex += products.length; // Увеличиваем индекс на количество загруженных продуктов
-
-        if (this.currentProductIndex >= this.totalProducts) {
-            this.showMoreContainer.style.display = 'none'; // Скрываем кнопку "Show More", если все продукты загружены
-        }
-
-        // Обновляем фильтры с новыми продуктами, если фильтр инициализирован
-        if (this.filter) {
-            this.filter.updateFilters(Object.values(this.productCache));
-        }
     }
 
     async loadMoreProducts() {
-        if (this.currentProductIndex >= this.totalProducts) {
-            this.showMoreContainer.style.display = 'none';
+        if (this.currentProductId > this.totalProducts) {
+            this.showMoreContainer.style.display = 'none'; // Скрываем кнопку, если все продукты загружены
             return;
         }
 
         try {
-            const { products } = await loadProducts(this.currentProductIndex, Catalog.PRODUCTS_PER_PAGE);
-            this.cacheProducts(products);
-            this.renderProducts(products); // Рендерим загруженные продукты
+            const { products } = await loadProducts(this.currentProductId, Catalog.PRODUCTS_PER_PAGE);
+            if (products && products.length > 0) {
+                this.cacheProducts(products);
+                this.resetFilters(); // Сбрасываем фильтры перед рендерингом
+                this.renderProducts(Object.values(this.productCache)); // Рендерим все кэшированные продукты
+            }
         } catch (error) {
             console.error('Ошибка при загрузке дополнительных продуктов:', error);
         }
+    }
+
+    resetFilters() {
+        this.filter.activeTags.clear();
+        this.filter.activeBrands.clear();
+        this.filter.updateFilters(Object.values(this.productCache)); // Обновляем фильтры с учетом всех кэшированных продуктов
     }
 
     filterProducts() {
