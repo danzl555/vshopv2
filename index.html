@@ -6,20 +6,31 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="./card/style.css" />
     <link rel="stylesheet" href="./bascket/style.css" />
-    <link rel="stylesheet" href="./adaptiv.css">
+    <link rel="stylesheet" href="./adaptiv.css" />
     <link rel="icon" type="image/png" href="./V.svg" />
     <title>V-shop</title>
   </head>
   <body>
     <div class="container">
-
       <!-- Шапка -->
       <header class="header">
         <div class="logo">
           <img src="./logo.svg" alt="Logo" />
         </div>
+        <button id="filter-button" class="filter-button">
+          <img src="./mage_filter.svg" alt="Фильтры" class="filter-icon" />
+          ФИЛЬТРЫ
+        </button>
         <nav class="nav"></nav>
       </header>
+
+      <!-- Место для фильтров, изначально скрыто -->
+      <div class="filter" id="filter-root" style="display: none">
+        <div class="tags-block">TAGS</div>
+        <div class="filter__tags-filter"></div>
+        <div class="brands-block">BRANDS</div>
+        <div class="filter__brands-filter"></div>
+      </div>
 
       <!-- Каталог -->
       <div class="content">
@@ -32,26 +43,21 @@
           </div>
 
           <div class="prod-bascket">
-            <div class="product-cart-bascket" id="product-cart-bascket">
-            </div>
-
-            <div class="total-checkout">
-            </div>
-
+            <div class="product-cart-bascket" id="product-cart-bascket"></div>
+            <div class="total-checkout"></div>
           </div>
         </div>
       </div>
 
       <footer class="footer">
         <p>
-          © 2020–2024 MADE WITH <span class="heart"><img src="./Vector.svg" alt=""></span> BY
+          © 2020–2024 MADE WITH
+          <span class="heart"><img src="./Vector.svg" alt="" class="footer-img"/></span> BY
           <a href="https://vistegra.by/" target="_blank">VISTEGRA</a>
         </p>
       </footer>
     </div>
 
-    <!-- <script type="module" src="./js/catalog.js"></script>
-    <script type="module" src="./js/bascket.js"></script> -->
     <script type="module" src="./js/script.js"></script>
   </body>
 </html>

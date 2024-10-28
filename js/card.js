@@ -1,4 +1,15 @@
 export class Card {
+    // Константы
+    static CARD_CLASS = 'card'; // Класс карточки
+    static PRODUCT_IMAGE_CLASS = 'product-image'; // Класс изображения продукта
+    static TITLE_CLASS = 'title'; // Класс заголовка
+    static DESC_CLASS = 'desc'; // Класс описания
+    static PRICE_CART_CLASS = 'price-cart'; // Класс контейнера цены и кнопки
+    static PRICE_CLASS = 'price'; // Класс цены
+    static BUY_BUTTON_CLASS = 'buy-button'; // Класс кнопки покупки
+    static BUY_BUTTON_ICON_SRC = './cart-icon.svg'; // Путь к иконке кнопки покупки
+    static BUY_BUTTON_ICON_ALT = 'cart icon'; // Альтернативный текст для иконки
+
     constructor(product) {
         this.product = product;
         this.element = this.createCard();
@@ -6,43 +17,42 @@ export class Card {
 
     createCard() {
         const card = document.createElement('div');
-        card.classList.add('card');
+        card.classList.add(Card.CARD_CLASS);
 
-        // Создаем элементы карточки
         const image = document.createElement('img');
         image.src = this.product.thumbnail;
-        image.classList.add('product-image');
+        image.classList.add(Card.PRODUCT_IMAGE_CLASS);
         image.alt = this.product.title;
 
         const title = document.createElement('h2');
-        title.classList.add('title');
+        title.classList.add(Card.TITLE_CLASS);
         title.textContent = this.product.title;
 
         const description = document.createElement('p');
-        description.classList.add('desc');
+        description.classList.add(Card.DESC_CLASS);
         description.textContent = this.product.description;
 
         const priceCartDiv = document.createElement('div');
-        priceCartDiv.classList.add('price-cart');
+        priceCartDiv.classList.add(Card.PRICE_CART_CLASS);
 
         const price = document.createElement('p');
-        price.classList.add('price');
-        price.textContent = `$${this.product.price}`;
+        price.classList.add(Card.PRICE_CLASS);
+        price.textContent = `$${this.product.price.toFixed(2)}`;
 
         const buyButton = document.createElement('button');
-        buyButton.classList.add('buy-button');
+        buyButton.classList.add(Card.BUY_BUTTON_CLASS);
 
         const buyButtonIcon = document.createElement('img');
-        buyButtonIcon.src = './cart-icon.svg';
-        buyButtonIcon.alt = 'cart icon';
+        buyButtonIcon.src = Card.BUY_BUTTON_ICON_SRC;
+        buyButtonIcon.alt = Card.BUY_BUTTON_ICON_ALT;
 
         buyButton.appendChild(buyButtonIcon);
 
         // Привязываем событие к кнопке
         buyButton.addEventListener('click', () => {
-            // Кастомное событие для добавления товара в корзину
-            const event = new CustomEvent('productAdded', { detail: this.product });
-            document.dispatchEvent(event);
+            if (this.addToCartCallback) {
+                this.addToCartCallback(this.product); // Вызываем функцию добавления в корзину
+            }
         });
 
         priceCartDiv.appendChild(price);

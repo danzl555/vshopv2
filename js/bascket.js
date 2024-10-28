@@ -1,10 +1,15 @@
 export class Cart {
+    // Константы
+    static TOTAL_LABEL = 'Total: '; // Метка для общего итога
+    static CHECKOUT_BUTTON_TEXT = 'CHECKOUT'; // Текст кнопки "CHECKOUT"
+
     constructor(cartRoot) {
-        this.cartItems = {};
+        this.cartItems = {}; // Хранит товары в корзине
         this.cartRoot = cartRoot; // Корневой элемент корзины
-        this.cartContent = this.createCartContent(); 
+        this.cartContent = this.createCartContent();
         this.initFromLocalStorage();
 
+        // Слушатель событий для добавления продукта в корзину
         document.addEventListener('productAdded', (event) => {
             this.addToCart(event.detail);
         });
@@ -24,7 +29,7 @@ export class Cart {
 
         const total = document.createElement('p');
         total.classList.add('total');
-        total.textContent = 'Total: ';
+        total.textContent = Cart.TOTAL_LABEL; // Используем константу для метки
 
         this.totalPriceElement = document.createElement('span');
         this.totalPriceElement.classList.add('total__price');
@@ -32,7 +37,7 @@ export class Cart {
 
         const checkoutButton = document.createElement('button');
         checkoutButton.classList.add('checkout-btn');
-        checkoutButton.textContent = 'CHECKOUT';
+        checkoutButton.textContent = Cart.CHECKOUT_BUTTON_TEXT; // Используем константу для текста кнопки
 
         checkoutButton.addEventListener('click', () => this.checkout());
 
@@ -67,12 +72,9 @@ export class Cart {
     }
 
     displayCartItem(product, quantity) {
-        // Используем массив для хранения новых элементов
-        let cartItem = this.productCartBasket.cartItemsElements || [];
-
-        // Проверяем, есть ли элемент в массиве
-        let existingCartItem = cartItem.find(item => item.product.id === product.id);
-
+        // Удаляем существующий элемент, если он уже есть
+        const existingCartItem = this.productCartBasket.querySelector(`.cart-item-${product.id}`);
+        
         if (!existingCartItem) {
             const newCartItem = document.createElement('div');
             newCartItem.classList.add('product-card', `cart-item-${product.id}`);
@@ -110,21 +112,20 @@ export class Cart {
             newCartItem.appendChild(closeBtn);
 
             this.productCartBasket.appendChild(newCartItem);
-            cartItem.push({ product, quantity, element: newCartItem, quantityElement, priceElement }); 
-            this.productCartBasket.cartItemsElements = cartItem;
         } else {
-           
-            existingCartItem.quantity++;
-            existingCartItem.quantityElement.textContent = `x${existingCartItem.quantity}`;
-            existingCartItem.priceElement.textContent = `$${(existingCartItem.quantity * product.price).toFixed(2)}`;
+            // Обновляем количество и цену существующего товара
+            const quantityElement = existingCartItem.querySelector('.quantity');
+            const priceElement = existingCartItem.querySelector('.price');
+            quantityElement.textContent = `x${quantity}`;
+            priceElement.textContent = `$${(quantity * product.price).toFixed(2)}`;
         }
     }
 
     removeFromCart(productId) {
-        const cartItem = this.productCartBasket.cartItemsElements.find(item => item.product.id === productId);
-
+        const cartItem = this.productCartBasket.querySelector(`.cart-item-${productId}`);
+        
         if (cartItem) {
-            cartItem.element.remove();
+            cartItem.remove();
             delete this.cartItems[productId];
             this.updateTotalPrice();
             this.saveToLocalStorage();

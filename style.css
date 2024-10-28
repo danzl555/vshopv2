@@ -52,7 +52,6 @@ body {
   height: 20px;
 }
 
-
 .logo {
   display: flex;
   align-items: center;
@@ -78,6 +77,115 @@ body {
   text-decoration: underline;
 }
 
+/* Блок фильтров */
+.filter-button {
+  display: flex; 
+  align-items: center; 
+  text-align: center;
+  justify-content: center;
+  padding: 10px 15px; 
+  background-color: #ffffff;
+  border: none; 
+  border-radius: 16px; 
+  font-weight: 600;
+  margin-right: -680px;
+  width: 300px;
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0; /* Цвет фона при наведении */
+}
+
+.filter-icon {
+  margin-right: 8px; /* Отступ справа от изображения */
+  width: 20px; /* Ширина изображения */
+  height: 20px; /* Высота изображения */
+}
+
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  width: 1240px;
+  margin: 0px auto;
+  border: 2px solid black;
+  padding-top: 10px;
+}
+
+.tags-block {
+  font-size: 16px;
+  width: 100%;
+  height: 30px;
+  color: white;
+  background-color: black;
+  padding: 10px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+
+}
+
+.brands-block {
+  font-size: 16px;
+  width: 100%;
+  height: 30px;
+  margin-top: 5px;
+  color: white;
+  background-color: black;
+  padding: 10px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+}
+
+.filter__tags-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  width: 1230px;
+}
+
+.filter__brands-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  width: 1230px;
+}
+
+/* Скрываем стандартный чекбокс */
+.checkbox-card {
+  display: none; /* Скрываем стандартный чекбокс */
+}
+
+/* Стили для метки (label) */
+.filter-label {
+  position: relative; /* Для позиционирования псевдоэлемента */
+  padding-left: 25px; /* Отступ для текста, чтобы он не налезал на псевдоэлемент */
+  cursor: pointer; /* Курсор при наведении */
+}
+
+/* Стили для активного состояния */
+.label-card.active {
+  background-color: black; /* Черный фон при активном состоянии */
+  color: white; /* Белый текст при активном состоянии */
+}
+
+/* Дополнительные стили для меток */
+.label-card {
+  font-size: 12px;
+  padding: 5px; /* Отступы вокруг текста */
+  border: 1px solid black; /* Рамка по умолчанию */
+  border-radius: 4px; /* Закругление углов */
+  transition: background-color 0.3s, color 0.3s; /* Плавный переход */
+}
+
+
 /* Блок для каталога и корзины */
 .content {
   width: 1240px;
@@ -90,16 +198,34 @@ body {
   width: 868px;
   background-color: #ffffff;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
+  flex-direction: column; /* Вертикальная компоновка */
 }
 
-.show-more-button {
-  display: block; 
+.products-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+
+/* Контейнер для кнопки Show More */
+.show-more-container {
+  width: 700px;
   margin: 20px auto;
-  padding: 10px 20px; 
-  width: 500px;
+  text-align: center;
+}
+
+.active-filter {
+  background-color: black; /* Черный фон */
+  color: white;            /* Белый текст */
+}
+
+
+.show-more-button {
+  width: 300px;
+  padding: 10px 20px;
+  height: 50px;
   background-color: #ffffff;
   color: black;
   border: 3px solid;
@@ -107,12 +233,14 @@ body {
   font-size: 16px;
   cursor: pointer;
   text-align: center;
-  transition: background-color 0.3s;
+  transition: background-color 0.7s;
 }
 
 .show-more-button:hover {
-  background-color: #c3c3c3;
+  background-color: #000000;
+  color: white;
 }
+
 
 /* Стили для футера */
 .footer {
@@ -133,4 +261,8 @@ body {
 .footer a {
   color: #fff;
   text-decoration: underline;
+}
+
+.footer-img{
+  width: 20px;
 }
